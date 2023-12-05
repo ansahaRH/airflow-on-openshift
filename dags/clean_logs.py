@@ -26,12 +26,12 @@ clean_logs_task = BashOperator(
     task_id='clean_logs',
     bash_command="""
         set -euo pipefail
-        readonly DIRECTORY="${AIRFLOW_HOME:-/usr/local/airflow}"
-        readonly RETENTION="${AIRFLOW__LOG_RETENTION_DAYS:-15}"
+        readonly DIRECTORY="${AIRFLOW_HOME:-/opt/airflow/logs}"
+        readonly RETENTION="${AIRFLOW__LOG_RETENTION_DAYS:-10}"
 
         trap "exit" INT TERM
 
-        readonly EVERY=$((15*60))
+        readonly EVERY=$((10*60))
 
         echo "Cleaning logs every $EVERY seconds"
 

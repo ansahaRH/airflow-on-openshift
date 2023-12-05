@@ -1,4 +1,3 @@
-
 defaultAirflowRepository: apache/airflow
 defaultAirflowTag: "2.7.0"
 
@@ -31,9 +30,9 @@ dags:
   gitSync:
     uid: null
     enabled: true
-    # repo: https://github.com/opendatahub-io-contrib/airflow-on-openshift.git
-    # branch: main
-    # subPath: dags
+    repo: https://github.com/ansahaRH/airflow-on-openshift.git
+    branch: main
+    subPath: dags
 
 logs:
   persistence:

@@ -18,7 +18,7 @@ dag = DAG(
     'clean_airflow_logs',
     default_args=default_args,
     description='DAG to clean Airflow logs',
-    schedule_interval=timedelta(minutes=15),  # Set the schedule interval
+    schedule_interval=timedelta(minutes=1),  # Set the schedule interval
 )
 
 # Define the BashOperator task
@@ -26,12 +26,12 @@ clean_logs_task = BashOperator(
     task_id='clean_logs',
     bash_command="""
         set -euo pipefail
-        readonly DIRECTORY="${AIRFLOW_HOME:-/opt/airflow/logs}"
+        readonly DIRECTORY="${AIRFLOW_HOME:/opt/airflow/dags/repo/dags/clean_logs.py}"
         readonly RETENTION="${AIRFLOW__LOG_RETENTION_DAYS:-10}"
 
         trap "exit" INT TERM
 
-        readonly EVERY=$((10*60))
+        readonly EVERY=$((1*60))
 
         echo "Cleaning logs every $EVERY seconds"
 

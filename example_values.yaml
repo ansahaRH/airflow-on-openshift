@@ -38,8 +38,6 @@ logs:
   persistence:
     enabled: true
     existingClaim: airflowtest
-    accessMode: ReadWriteMany
-    subPath: airflow/logs
   path: /opt/airflow/logs
 
 flower:

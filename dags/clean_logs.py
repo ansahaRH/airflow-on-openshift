@@ -26,28 +26,15 @@ clean_logs_task = BashOperator(
     task_id='clean_logs',
     bash_command="""
         set -euo pipefail
-        readonly DIRECTORY="${AIRFLOW_HOME:/opt/airflow/dags/repo/dags/clean_logs.py}"
-        readonly RETENTION="${AIRFLOW__LOG_RETENTION_DAYS:-10}"
+        readonly PVC_DIRECTORY="/volumes/csi/csi-vol-12d336e7-5ccf-4fef-9e3b-faf18dd8809f/9585e4a3-199f-4c44-aae0-d433490cb7c4l"
+        readonly RETENTION="${AIRFLOW__LOG_RETENTION_DAYS:-0}"
 
         trap "exit" INT TERM
 
-        readonly EVERY=$((1*60))
-
-        echo "Cleaning logs every $EVERY seconds"
-
-        while true; do
-          echo "Trimming airflow logs to ${RETENTION} days."
-          find "${DIRECTORY}"/logs \
-            -type d -name 'lost+found' -prune -o \
+        echo "Cleaning logs older than ${RETENTION} days."
+        find "${PVC_DIRECTORY}"/logs \
             -type f -mtime +"${RETENTION}" -name '*.log' -print0 | \
             xargs -0 rm -f
-
-          find "${DIRECTORY}"/logs -type d -empty -delete || true
-
-          seconds=$(( $(date -u +%s) % EVERY))
-          (( seconds < 1 )) || sleep $((EVERY - seconds - 1))
-          sleep 1
-        done
     """,
     dag=dag,
 )
@@ -57,4 +44,3 @@ clean_logs_task = BashOperator(
 
 if __name__ == "__main__":
     dag.cli()
-

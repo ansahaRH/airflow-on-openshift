@@ -36,7 +36,8 @@ dags:
 
 logs:
   persistence:
-    enabled: false
+    enabled: true
+    existingClaim: airflowfinal
 
 flower:
   enabled: false

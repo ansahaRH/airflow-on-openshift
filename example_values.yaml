@@ -35,9 +35,13 @@ dags:
     subPath: dags
 
 logs:
+
+  path: /opt/airflow/logs
   persistence:
     enabled: true
-    existingClaim: airflowfinal
+    subpath: airflow/logs
+    existingClaim: airflowtest
+    accessMode: ReadWriteMany
 
 flower:
   enabled: false

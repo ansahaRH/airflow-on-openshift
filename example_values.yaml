@@ -38,7 +38,7 @@ logs:
   persistence:
     enabled: true
     existingClaim: airflowtest
-  path: /opt/airflow/logs
+
 
 flower:
   enabled: false

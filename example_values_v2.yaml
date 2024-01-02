@@ -1,0 +1,153 @@
+
+airflow:
+  image:
+    repository: apache/airflow
+    tag: 2.6.3-python3.9
+    uid: 1000680000
+    gid: 1000680000
+
+  executor: CeleryExecutor
+  fernetKey: "7T512UXSSmBOkpWimFHIVb8jK6lfmSAvx4mO6Arehnc="
+  webserverSecretKey: "ShouldNotBeInProduction"
+
+  ## a list of users to create
+  ## - templates can ONLY be used in: `password`, `email`, `firstName`, `lastName`
+  ## - templates used a bash-like syntax: ${MY_USERNAME}, $MY_USERNAME
+  ## - templates are defined in `usersTemplates`
+  ## - `role` can be a single role or a list of roles
+  ##
+  users:
+    - username: admin
+      password: admin
+      role: Admin
+      email: admin@example.com
+      firstName: admin
+      lastName: admin
+
+  ## pip packages that are protected from upgrade/downgrade by `extraPipPackages`
+  ## - [WARNING] Pods will fail to start if `extraPipPackages` would cause these packages to change versions
+  ##
+  protectedPipPackages:
+    - "apache-airflow"
+  
+  defaultSecurityContext:
+    ## sets the filesystem owner group of files/folders in mounted volumes
+    ## this does NOT give root permissions to Pods, only the "root" group
+    fsGroup: 1000680000
+    
+  securityContext: 
+    fsGroup: 1000680000
+
+
+  ########################################
+  ## COMPONENT | db-migrations Deployment
+  ########################################
+  dbMigrations:
+    ## if the db-migrations Deployment/Job is created
+    ## - [WARNING] if `false`, you have to MANUALLY run `airflow db upgrade` when required
+    ##
+    enabled: true
+
+    ## if a post-install helm Job should be used (instead of a Deployment)
+    ## - [WARNING] setting `true` will NOT work with the helm `--wait` flag,
+    ##   this is because post-install helm Jobs run AFTER the main resources become Ready,
+    ##   which will cause a deadlock, as other resources require db-migrations to become Ready
+    ##
+    runAsJob: false
+   
+
+scheduler:
+  replicas: 1
+  resources:
+    limits:
+      cpu: 2
+      memory: 2Gi
+    requests:
+      cpu: 2
+      memory: 2Gi
+  logCleanup:
+    enabled: false
+    retentionMinutes: 2
+  livenessProbe:
+    enabled: true
+    taskCreationCheck:
+      enabled: false
+      thresholdSeconds: 300
+      schedulerAgeBeforeCheck: 180
+
+web:
+  replicas: 2
+  readinessProbe:
+    initialDelaySeconds: 45
+  livenessProbe:
+    initialDelaySeconds: 60
+
+workers:
+  enabled: true
+  replicas: 2
+  resources:
+    limits:
+      cpu: 1
+      memory: 3Gi
+    requests:
+      cpu: 1
+      memory: 1Gi
+  logCleanup:
+    enabled: false
+    retentionMinutes: 2
+
+# Airflow Triggerer Config
+triggerer:
+  enabled: true
+  replicas: 1
+
+statsd:
+  securityContext: 
+    fsGroup: 1000680000
+    runAsUser: 1000680000
+    runAsGroup: 0
+
+pgbouncer:
+  enabled: false
+  securityContext: 
+    fsGroup: 1000680000
+    runAsUser: 1000680000
+    runAsGroup: 0
+
+redis:
+  securityContext: 
+    fsGroup: 1000680000
+    runAsUser: 1000680000
+    runAsGroup: 0
+
+dags:
+  persistence:
+    enabled: false
+  gitSync:
+    enabled: false
+
+
+logs:
+  persistence:
+    enabled: true
+    existingClaim: airflow-pvc
+
+
+flower:
+  enabled: false
+
+# ingress:
+#   web:
+#     enabled: true
+
+postgresql:
+  enabled: true
+  primary:
+    podSecurityContext:
+      enabled: false
+    containerSecurityContext:
+      enabled: false
+  securityContext:
+    enabled: true 
+    fsGroup: 1000680000
+  

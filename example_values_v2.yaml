@@ -58,13 +58,6 @@ airflow:
 
 scheduler:
   replicas: 1
-  resources:
-    limits:
-      cpu: 2
-      memory: 2Gi
-    requests:
-      cpu: 2
-      memory: 2Gi
   logCleanup:
     enabled: false
     retentionMinutes: 2
@@ -85,13 +78,6 @@ web:
 workers:
   enabled: true
   replicas: 2
-  resources:
-    limits:
-      cpu: 1
-      memory: 3Gi
-    requests:
-      cpu: 1
-      memory: 1Gi
   logCleanup:
     enabled: false
     retentionMinutes: 2
@@ -130,7 +116,7 @@ dags:
 logs:
   persistence:
     enabled: true
-    existingClaim: airflow-pvc
+    existingClaim: airflow-test
 
 
 flower:

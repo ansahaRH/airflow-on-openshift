@@ -117,7 +117,7 @@ dags:
     image:
       uid: 1000730000
     enabled: true
-    repo: https://github.com/sameerameduri/airflow-on-openshift
+    repo: https://github.com/ansahaRH/airflow-on-openshift.git
     branch: main
     subPath: dags
     syncWait: 60

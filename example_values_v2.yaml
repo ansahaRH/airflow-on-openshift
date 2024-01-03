@@ -61,19 +61,10 @@ scheduler:
   logCleanup:
     enabled: false
     retentionMinutes: 2
-  livenessProbe:
-    enabled: true
-    taskCreationCheck:
-      enabled: false
-      thresholdSeconds: 300
-      schedulerAgeBeforeCheck: 180
 
 web:
   replicas: 2
-  readinessProbe:
-    initialDelaySeconds: 45
-  livenessProbe:
-    initialDelaySeconds: 60
+
 
 workers:
   enabled: true
@@ -110,7 +101,11 @@ dags:
   persistence:
     enabled: false
   gitSync:
-    enabled: false
+    uid: null
+    enabled: true
+    repo: https://github.com/ansahaRH/airflow-on-openshift.git
+    branch: main
+    subPath: dags
 
 
 logs:

@@ -41,7 +41,7 @@ setup_postgres(){
 
 helm_install(){
   # add helm repo
-  helm repo add apache-airflow https://airflow.apache.org
+  helm repo add apache-helm https://airflow-helm.github.io/charts
 
   # get openshift uid/gid range
   CHART_UID=$(oc get project ${PROJECT} -o jsonpath="{['metadata.annotations.openshift\.io/sa\.scc\.uid-range']}" | sed "s@/.*@@")

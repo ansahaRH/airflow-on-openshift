@@ -51,7 +51,7 @@ airflow:
 scheduler:
   replicas: 1
   logCleanup:
-    enabled: false
+    enabled: True
     retentionMinutes: 2
 
 web:
@@ -62,7 +62,7 @@ workers:
   enabled: true
   replicas: 2
   logCleanup:
-    enabled: false
+    enabled: True
     retentionMinutes: 2
 
 # Airflow Triggerer Config
@@ -91,9 +91,11 @@ dags:
 
 
 logs:
+  path: /opt/airflow/logs
   persistence:
-    enabled: true
+    enabled: false
     existingClaim: airflow-test
+    accessMode: ReadWriteMany
 
 
 flower:
